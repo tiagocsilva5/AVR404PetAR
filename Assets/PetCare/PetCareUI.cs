@@ -65,7 +65,11 @@ public sealed class PetCareUI : MonoBehaviour
         nameInput.onValueChanged.AddListener(_ => UpdateSelection());
         scanBack.onClick.AddListener(() => Show(scanFromSavedProfile ? menu : selection));
         preview.onClick.AddListener(ScanAction);
-        if (UseAR) ar.Changed += RefreshAR;
+        if (UseAR)
+        {
+            ar.Changed += RefreshAR;
+            ar.SurfacePlaced += PlaceDogOnSurface;
+        }
         feed.onClick.AddListener(Feed);
         play.onClick.AddListener(Play);
         rest.onClick.AddListener(Rest);
@@ -165,6 +169,11 @@ public sealed class PetCareUI : MonoBehaviour
         if (!ar.CameraOpen) ar.Open(pet.dog);
     }
 
+    private void PlaceDogOnSurface()
+    {
+        if (current == scan) OpenCare();
+    }
+
     private void ResumeCare()
     {
         if (UseAR) OpenScan(true);
@@ -186,6 +195,7 @@ public sealed class PetCareUI : MonoBehaviour
         careSubtitle.text = ar.Ready ? $"Live AR · {ar.TargetLabel}" : "Live AR · Find the placement area";
         feed.interactable = play.interactable = rest.interactable = ar.CanInteract;
         if (current == care && !ar.Ready) feedback.text = ar.Status;
+        else if (current == care && ar.IsGreeting) feedback.text = $"{pet.name} is happy to see you!";
         else if (current == care && feedback.text != null && feedback.text.StartsWith("Tracking lost"))
             feedback.text = "Tracking restored. Care can resume.";
     }
@@ -209,7 +219,17 @@ public sealed class PetCareUI : MonoBehaviour
 
     private void Feed()
     {
-        if (UseAR && !ar.PlayAction(PetCareAR.DogAction.Feed)) return;
+        if (UseAR)
+        {
+            if (ar.PlayAction(PetCareAR.DogAction.Feed, CompleteMeal))
+                feedback.text = $"{pet.name} is eating…";
+            return;
+        }
+        CompleteMeal();
+    }
+
+    private void CompleteMeal()
+    {
         pet.hunger = Mathf.Max(0, pet.hunger - 20);
         pet.fed = true;
         CompleteAction($"{pet.name} was fed.");
@@ -270,4 +290,3 @@ public sealed class PetCareUI : MonoBehaviour
         PlayerPrefs.Save();
     }
 }
-

@@ -13,8 +13,5 @@ PetAR is an Android augmented-reality dog-care simulator made in Unity for AVR40
 Switch the build platform to **Android** and build **PetAR**. Use a 64-bit [ARCore-supported Android device](https://developers.google.com/ar/devices/) with Google Play Services for AR. Camera access is required for live placement.
 
 1. Choose a dog, enter its name, and open the AR camera.
-2. Move the phone slowly until the interface prompts you to tap a surface, then tap the tabletop or floor. For image tracking, print the five PNGs in [Assets/PetCare/Tracking](Assets/PetCare/Tracking) at **10 cm × 10 cm** each and scan the card assigned to your dog.
-3. Tap **Start AR care**. Use **Feed**, **Play**, and **Rest** to test the corresponding reactions and meter changes.
-
-The public Unity project includes the PetAR scene, game code, user interface, and caregiver cards. Surface readiness appears in the scan panel.
-
+2. Aim at a tabletop or floor until the mint placement ring appears, then tap the ring. The dog appears facing you and greets you with a tail wag. For image tracking, print the matching PNG from [Assets/PetCare/Tracking](Assets/PetCare/Tracking) at **10 cm × 10 cm**, scan the card, and tap **Start AR care**.
+3. Tap **Feed** to place the bowl and start the eating animation. Hunger updates when the meal finishes. **Play** and **Rest** play their own reactions and update the care meters.
